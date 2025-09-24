@@ -3,7 +3,8 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI']= 'sqlite///cars.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///cars.db'
+
 
 db = SQLAlchemy(app)
 
@@ -38,13 +39,15 @@ def list_cars():
 def add_car():
     data = request.get_json
     car = Car(
-        name=data['name'],
-        price=data['price',]
-        year=data['year'],
-        type=data['type'],
-        image_url=data.get('image_url')
+        name = data['name'],
+        price = data['price'],
+        year = data['year'],
+        type = data['type'],
+        image_url = data.get('image_url')
     )
-    
     db.session.add(car)
     db.session.commit()
     return jsonify(car.to_dict()),201
+
+if __name__ == "__main__":
+    app.run(debug=True)
