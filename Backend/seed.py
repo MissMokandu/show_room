@@ -1,9 +1,14 @@
-from app import app  
-from models import db, Car
+from app import app
+from models import db, Car, Admin, Showroom
 
-with app.app_context():  
-    db.drop_all()  
-    db.create_all()  
+with app.app_context():
+    db.drop_all()
+    db.create_all()
+
+    # Create one showroom
+    showroom = Showroom(name="Main Showroom", location="Nairobi")
+    db.session.add(showroom)
+    db.session.commit() 
 
     sample_cars = [  
         Car(name="Toyota Corolla", price=10000, year=2018, type="Sedan", image_url="https://images.unsplash.com/photo-1619682817481-e994891cd1f5?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),  
@@ -18,7 +23,14 @@ with app.app_context():
         Car(name="Toyota Hiace", price=25000, year=2018, type="Van", image_url="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYNwXk-kAz8l28r3rLF2MO4NxWvybtM0xF1A&s")  
     ]  
 
-    db.session.bulk_save_objects(sample_cars)  
+    db.session.bulk_save_objects(sample_cars) 
+    
+    admin1 = Admin(username="admin1", showroom_id=showroom.id)
+    admin1.set_password("password123")
+    admin2 = Admin(username="admin2", showroom_id=showroom.id)
+    admin2.set_password("password456")
+    db.session.add_all([admin1, admin2]) 
+    
     db.session.commit()  
 
     print("Database seeded with sample cars!")  
