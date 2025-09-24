@@ -37,7 +37,7 @@ def list_cars():
 
 @app.route('/cars', methods=['POST'])
 def add_car():
-    data = request.get_json
+    data = request.get_json()
     car = Car(
         name = data['name'],
         price = data['price'],
