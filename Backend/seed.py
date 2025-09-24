@@ -1,4 +1,5 @@
-from app import db, Car, app  
+from app import app  
+from models import db, Car
 
 with app.app_context():  
     db.drop_all()  
