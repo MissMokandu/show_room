@@ -1,9 +1,9 @@
-// src/pages/Showrooms.js
+// src/pages/Showroom.js
 import React, { useState, useEffect } from 'react';
-import { showroomsAPI, carsAPI } from '../services/api';
+import { showroomAPI, carsAPI } from '../services/api';
 
-const Showrooms = () => {
-  const [showrooms, setShowrooms] = useState([]);
+const Showroom = () => {
+  const [showrooms, setShowroom] = useState([]);
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,11 +14,11 @@ const Showrooms = () => {
 
   const fetchData = async () => {
     try {
-      const [showroomsResponse, carsResponse] = await Promise.all([
-        showroomsAPI.getAll(),
+      const [showroomResponse, carsResponse] = await Promise.all([
+        showroomAPI.getAll(),
         carsAPI.getAll()
       ]);
-      setShowrooms(showroomsResponse.data);
+      setShowroom(showroomResponse.data);
       setCars(carsResponse.data);
       setLoading(false);
     } catch (err) {
@@ -39,11 +39,11 @@ const Showrooms = () => {
   if (error) return <div className="error">{error}</div>;
 
   return (
-    <div className="showrooms-page">
+    <div className="showroom-page">
       <div className="container">
         <h1>Our Showrooms</h1>
         <p className="page-description">
-          Browse our network of premium car showrooms, each offering a carefully curated selection of vehicles.
+          Browse our network of premium car showroom, each offering a carefully curated selection of vehicles.
         </p>
 
         <div className="showrooms-grid">
@@ -139,9 +139,9 @@ const Showrooms = () => {
           })}
         </div>
 
-        {showrooms.length === 0 && (
+        {showroom.length === 0 && (
           <div className="no-showrooms">
-            <p>No showrooms available at the moment.</p>
+            <p>No showroom available at the moment.</p>
           </div>
         )}
       </div>
@@ -149,4 +149,4 @@ const Showrooms = () => {
   );
 };
 
-export default Showrooms;
+export default Showroom;
