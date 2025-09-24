@@ -19,12 +19,12 @@ export const carsAPI = {
 };
 
 // Showrooms API
-export const showroomsAPI = {
-  getAll: () => api.get('/showrooms'),
-  getById: (id) => api.get(`/showrooms/${id}`),
-  create: (showroomData) => api.post('/showrooms', showroomData),
-  update: (id, showroomData) => api.put(`/showrooms/${id}`, showroomData),
-  delete: (id) => api.delete(`/showrooms/${id}`),
+export const showroomAPI = {
+  getAll: () => api.get('/showroom'),
+  getById: (id) => api.get(`/showroom/${id}`),
+  create: (showroomData) => api.post('/showroom', showroomData),
+  update: (id, showroomData) => api.put(`/showroom/${id}`, showroomData),
+  delete: (id) => api.delete(`/showroom/${id}`),
 };
 
 // Contacts API

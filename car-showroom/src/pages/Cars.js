@@ -1,79 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { carsAPI } from '../services/api';
-import CarCard from '../components/CarCard';
 
-const Home = () => {
-  const [featuredCars, setFeaturedCars] = useState([]);
+const Cars = () => {
+  const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    fetchFeaturedCars();
+    fetchCars();
   }, []);
 
-  const fetchFeaturedCars = async () => {
+  const fetchCars = async () => {
     try {
       const response = await carsAPI.getAll();
-      // Get first 3 cars as featured
-      setFeaturedCars(response.data.slice(0, 3));
-      setLoading(false);
+      setCars(response.data);
+      setError(null);
     } catch (err) {
-      setError('Failed to load featured cars');
+      setError('Failed to load cars');
+    } finally {
       setLoading(false);
     }
   };
 
-  if (loading) return <div className="loading">Loading...</div>;
+  const filteredCars = cars.filter(car =>
+    car.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    car.model.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (loading) return <div className="loading">Loading cars...</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
-    <div className="home">
-      <section className="hero">
-        <div className="hero-content">
-          <h1>Welcome to Car Showroom</h1>
-          <p>Discover your perfect vehicle from our premium collection</p>
-          <Link to="/cars" className="cta-button">
-            Browse All Cars
-          </Link>
-        </div>
-      </section>
+    <div className="cars-page">
+      <h1>Our Cars</h1>
+      
+      <div className="search-section">
+        <input
+          type="text"
+          placeholder="Search cars by make or model..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+      </div>
 
-      <section className="featured-cars">
-        <div className="container">
-          <h2>Featured Cars</h2>
-          <div className="cars-grid">
-            {featuredCars.map(car => (
-              <CarCard key={car.id} car={car} />
-            ))}
-          </div>
-          {featuredCars.length === 0 && (
-            <p className="no-cars">No featured cars available at the moment.</p>
-          )}
-        </div>
-      </section>
-
-      <section className="features">
-        <div className="container">
-          <h2>Why Choose Us?</h2>
-          <div className="features-grid">
-            <div className="feature">
-              <h3>Premium Quality</h3>
-              <p>All our vehicles undergo thorough inspection and quality checks</p>
-            </div>
-            <div className="feature">
-              <h3>Best Prices</h3>
-              <p>Competitive pricing with flexible financing options available</p>
-            </div>
-            <div className="feature">
-              <h3>Full Service</h3>
-              <p>Complete after-sales service and maintenance support</p>
+      <div className="cars-grid">
+        {filteredCars.map(car => (
+          <div key={car.id} className="car-card">
+            {car.image_url && (
+              <img src={car.image_url} alt={`${car.make} ${car.model}`} />
+            )}
+            <div className="car-info">
+              <h3>{car.year} {car.make} {car.model}</h3>
+              <p className="price">${car.price?.toLocaleString()}</p>
+              <p>Mileage: {car.mileage?.toLocaleString() || 'N/A'} miles</p>
+              <Link to={`/cars/${car.id}`} className="btn btn-secondary">
+                View Details
+              </Link>
             </div>
           </div>
-        </div>
-      </section>
+        ))}
+      </div>
+      
+      {filteredCars.length === 0 && !loading && (
+        <p className="no-results">No cars found matching your search.</p>
+      )}
     </div>
   );
 };
 
-export default Home;
+export default Cars;

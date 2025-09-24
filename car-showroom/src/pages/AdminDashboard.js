@@ -1,6 +1,6 @@
 // src/pages/AdminDashboard.js
-import React, { useState, useEffect } from 'react';
-import { carsAPI, showroomsAPI, contactsAPI } from '../services/api';
+import { useState, useEffect } from 'react';
+import { carsAPI, contactsAPI, showroomAPI } from '../services/api';
 import CarForm from '../components/CarForm';
 import ShowroomForm from '../components/ShowroomForm';
 
@@ -22,7 +22,7 @@ const AdminDashboard = () => {
     try {
       const [carsResponse, showroomsResponse, contactsResponse] = await Promise.all([
         carsAPI.getAll(),
-        showroomsAPI.getAll(),
+        showroomAPI.getAll(),
         contactsAPI.getAll()
       ]);
       setCars(carsResponse.data);
@@ -47,17 +47,6 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDeleteShowroom = async (showroomId) => {
-    if (window.confirm('Are you sure you want to delete this showroom?')) {
-      try {
-        await showroomsAPI.delete(showroomId);
-        setShowrooms(showrooms.filter(showroom => showroom.id !== showroomId));
-        alert('Showroom deleted successfully');
-      } catch (error) {
-        alert('Failed to delete showroom');
-      }
-    }
-  };
 
   const handleCarFormSuccess = (carData, isEdit) => {
     if (isEdit) {
@@ -174,65 +163,6 @@ const AdminDashboard = () => {
                 </tbody>
               </table>
               {cars.length === 0 && <p className="no-data">No cars available</p>}
-            </div>
-          </div>
-        )}
-
-        {/* Showrooms Tab */}
-        {activeTab === 'showrooms' && (
-          <div className="tab-content">
-            <div className="tab-header">
-              <h2>Manage Showrooms</h2>
-              <button 
-                onClick={() => setShowShowroomForm(true)}
-                className="add-btn"
-              >
-                + Add New Showroom
-              </button>
-            </div>
-            
-            <div className="data-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Address</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>Cars Count</th>
-                    <th>Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {showrooms.map(showroom => (
-                    <tr key={showroom.id}>
-                      <td>{showroom.name}</td>
-                      <td>{showroom.address || 'N/A'}</td>
-                      <td>{showroom.phone || 'N/A'}</td>
-                      <td>{showroom.email || 'N/A'}</td>
-                      <td>{cars.filter(car => car.showroom_id === showroom.id).length}</td>
-                      <td>
-                        <button 
-                          onClick={() => {
-                            setEditingItem(showroom);
-                            setShowShowroomForm(true);
-                          }}
-                          className="edit-btn"
-                        >
-                          Edit
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteShowroom(showroom.id)}
-                          className="delete-btn"
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              {showrooms.length === 0 && <p className="no-data">No showrooms available</p>}
             </div>
           </div>
         )}

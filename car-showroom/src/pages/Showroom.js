@@ -27,10 +27,6 @@ const Showroom = () => {
     }
   };
 
-  const getShowroomCarCount = (showroomId) => {
-    return cars.filter(car => car.showroom_id === showroomId).length;
-  };
-
   const getShowroomCars = (showroomId) => {
     return cars.filter(car => car.showroom_id === showroomId);
   };
@@ -139,7 +135,7 @@ const Showroom = () => {
           })}
         </div>
 
-        {showroom.length === 0 && (
+        {showrooms.length === 0 && (
           <div className="no-showrooms">
             <p>No showroom available at the moment.</p>
           </div>

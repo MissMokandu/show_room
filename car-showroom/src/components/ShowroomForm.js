@@ -2,7 +2,7 @@
 import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { showroomsAPI } from '../services/api';
+import { showroomAPI } from '../services/api';
 
 const ShowroomForm = ({ showroom, onSuccess, onClose }) => {
   const isEditing = Boolean(showroom);
@@ -17,7 +17,6 @@ const ShowroomForm = ({ showroom, onSuccess, onClose }) => {
       .max(200, 'Address must be less than 200 characters')
       .required('Address is required'),
     phone: Yup.string()
-      .matches(/^[\d\s\-\+\(\)]+$/, 'Invalid phone number format')
       .min(10, 'Phone number must be at least 10 digits')
       .required('Phone number is required'),
     email: Yup.string()
@@ -42,9 +41,9 @@ const ShowroomForm = ({ showroom, onSuccess, onClose }) => {
     try {
       let response;
       if (isEditing) {
-        response = await showroomsAPI.update(showroom.id, values);
+        response = await showroomAPI.update(showroom.id, values);
       } else {
-        response = await showroomsAPI.create(values);
+        response = await showroomAPI.create(values);
       }
 
       onSuccess(response.data, isEditing);

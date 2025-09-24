@@ -32,7 +32,7 @@ const Navbar = () => {
           <li className="nav-item">
             <Link 
               to="/showrooms" 
-              className={`nav-link ${isActive('/showrooms') ? 'active' : ''}`}
+              className={`nav-link ${isActive('/showroom') ? 'active' : ''}`}
             >
               Showrooms
             </Link>
