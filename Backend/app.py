@@ -16,9 +16,7 @@ CORS(app)
 # with app.app_context():
 #     db.create_all()
 
-# -----------------------
-# Car Routes
-# -----------------------
+
 @app.route('/cars', methods=['GET'])
 def list_cars():
     cars = Car.query.all()
