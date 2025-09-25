@@ -87,9 +87,9 @@ const Contact = () => {
               <h3>Services</h3>
               <ul>
                 <li>Quality Pre-Owned Vehicles</li>
-                <li>Vehicle Financing</li>
+                <li>Brand New Cars</li>
                 <li>Trade-In Evaluations</li>
-                <li>Extended Warranties</li>
+                <li>Rent a car</li>
                 <li>Service & Maintenance</li>
               </ul>
             </div>
