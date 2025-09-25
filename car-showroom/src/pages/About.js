@@ -20,8 +20,8 @@ const About = () => {
             <div className="story-text">
               <h2>Our Story</h2>
               <p>
-                Founded over a decade ago, Auto Gallery has been serving the community with 
-                quality pre-owned vehicles and exceptional customer service. What started as 
+                Founded over 12 years ago, Auto Gallery has been serving the community with 
+                quality pre-owned and brand new vehicles and exceptional customer service. What started as 
                 a small family business has grown into a trusted name in the automotive industry, 
                 built on the principles of honesty, transparency, and customer satisfaction.
               </p>
@@ -33,8 +33,7 @@ const About = () => {
             </div>
             <div className="story-image">
               <div className="placeholder-image">
-                <span>🏢</span>
-                <p>Our Showroom</p>
+                <img src="https://img.freepik.com/premium-photo/depict-row-new-cars-neatly-lined-up-showroom-highlighting-variety-choices_693425-49568.jpg" alt='Our Showroom'/>
               </div>
             </div>
           </div>
@@ -110,11 +109,11 @@ const About = () => {
             <div className="contact-info">
               <div className="contact-item">
                 <h3>📍 Location</h3>
-                <p>123 Auto Gallery Drive<br />Your City, ST 12345</p>
+                <p>Nairobi, Kenya<br />P.O Box: 1267</p>
               </div>
               <div className="contact-item">
                 <h3>📞 Phone</h3>
-                <p><a href="tel:(555)123-4567">(555) 123-4567</a></p>
+                <p><a href="tel:(254)123-4567">(254) 123-4567</a></p>
               </div>
               <div className="contact-item">
                 <h3>✉️ Email</h3>
@@ -127,13 +126,6 @@ const About = () => {
                   Saturday: 9:00 AM - 6:00 PM<br />
                   Sunday: 12:00 PM - 5:00 PM
                 </p>
-              </div>
-            </div>
-            <div className="map-placeholder">
-              <div className="placeholder-image">
-                <span>🗺️</span>
-                <p>Interactive Map</p>
-                <small>Directions to our showroom</small>
               </div>
             </div>
           </div>

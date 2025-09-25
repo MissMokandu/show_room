@@ -63,7 +63,7 @@ const Contact = () => {
             <div className="info-section">
               <h3>Address</h3>
               <p>Nairobi, Kenya<br />
-                 1267</p>
+                 P.O Box: 1267</p>
             </div>
 
             <div className="info-section">
