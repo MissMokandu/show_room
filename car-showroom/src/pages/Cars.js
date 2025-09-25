@@ -1,13 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { carsAPI } from '../services/api';
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { carsAPI } from "../services/api";
 
 const Cars = () => {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [sortBy, setSortBy] = useState('year-desc');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortBy, setSortBy] = useState("year-desc");
+  const [selectedType, setSelectedType] = useState("");
+  const [minYear, setMinYear] = useState("");
+  const [maxYear, setMaxYear] = useState("");
+  const [minPrice, setMinPrice] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
 
   useEffect(() => {
     fetchCars();
@@ -19,41 +24,57 @@ const Cars = () => {
       setCars(response.data);
       setError(null);
     } catch (err) {
-      setError('Failed to load cars');
+      setError("Failed to load cars");
     } finally {
       setLoading(false);
     }
   };
 
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 0,
     }).format(price);
   };
 
+  const uniqueTypes = [...new Set(cars.map((car) => car.type))];
+
   const filteredAndSortedCars = cars
-    .filter(car =>
-      car.make.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      car.model.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      car.year.toString().includes(searchTerm) ||
-      (car.color && car.color.toLowerCase().includes(searchTerm.toLowerCase()))
-    )
+    .filter((car) => {
+      const matchesSearch =
+        !searchTerm ||
+        (car.name &&
+          car.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (car.type &&
+          car.type.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        car.year.toString().includes(searchTerm);
+
+      const matchesType = !selectedType || car.type === selectedType;
+      const matchesMinYear = !minYear || car.year >= parseInt(minYear);
+      const matchesMaxYear = !maxYear || car.year <= parseInt(maxYear);
+      const matchesMinPrice = !minPrice || car.price >= parseFloat(minPrice);
+      const matchesMaxPrice = !maxPrice || car.price <= parseFloat(maxPrice);
+
+      return (
+        matchesSearch &&
+        matchesType &&
+        matchesMinYear &&
+        matchesMaxYear &&
+        matchesMinPrice &&
+        matchesMaxPrice
+      );
+    })
     .sort((a, b) => {
       switch (sortBy) {
-        case 'year-desc':
+        case "year-desc":
           return b.year - a.year;
-        case 'year-asc':
+        case "year-asc":
           return a.year - b.year;
-        case 'price-desc':
+        case "price-desc":
           return b.price - a.price;
-        case 'price-asc':
+        case "price-asc":
           return a.price - b.price;
-        case 'mileage-asc':
-          return (a.mileage || 0) - (b.mileage || 0);
-        case 'mileage-desc':
-          return (b.mileage || 0) - (a.mileage || 0);
         default:
           return 0;
       }
@@ -67,14 +88,16 @@ const Cars = () => {
       <div className="container">
         <div className="page-header">
           <h1>Our Car Inventory</h1>
-          <p className="subtitle">Discover your perfect vehicle from our carefully selected collection</p>
+          <p className="subtitle">
+            Discover your perfect vehicle from our carefully selected collection
+          </p>
         </div>
-        
+
         <div className="controls-section">
           <div className="search-section">
             <input
               type="text"
-              placeholder="Search by make, model, year, or color..."
+              placeholder="Search by name, type, or year..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="search-input"
@@ -93,22 +116,77 @@ const Cars = () => {
               <option value="year-asc">Oldest First</option>
               <option value="price-asc">Price: Low to High</option>
               <option value="price-desc">Price: High to Low</option>
-              <option value="mileage-asc">Lowest Mileage</option>
-              <option value="mileage-desc">Highest Mileage</option>
             </select>
           </div>
         </div>
 
+        <div className="filters-section">
+          <div className="filter-group">
+            <label htmlFor="type">Type:</label>
+            <select
+              id="type"
+              value={selectedType}
+              onChange={(e) => setSelectedType(e.target.value)}
+              className="filter-select"
+            >
+              <option value="">All Types</option>
+              {uniqueTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <label>Year:</label>
+            <input
+              type="number"
+              placeholder="Min Year"
+              value={minYear}
+              onChange={(e) => setMinYear(e.target.value)}
+              className="filter-input"
+            />
+            <input
+              type="number"
+              placeholder="Max Year"
+              value={maxYear}
+              onChange={(e) => setMaxYear(e.target.value)}
+              className="filter-input"
+            />
+          </div>
+
+          <div className="filter-group">
+            <label>Price:</label>
+            <input
+              type="number"
+              placeholder="Min Price"
+              value={minPrice}
+              onChange={(e) => setMinPrice(e.target.value)}
+              className="filter-input"
+            />
+            <input
+              type="number"
+              placeholder="Max Price"
+              value={maxPrice}
+              onChange={(e) => setMaxPrice(e.target.value)}
+              className="filter-input"
+            />
+          </div>
+        </div>
+
         <div className="results-info">
-          <p>Showing {filteredAndSortedCars.length} of {cars.length} vehicles</p>
+          <p>
+            Showing {filteredAndSortedCars.length} of {cars.length} vehicles
+          </p>
         </div>
 
         <div className="cars-grid">
-          {filteredAndSortedCars.map(car => (
+          {filteredAndSortedCars.map((car) => (
             <div key={car.id} className="car-card">
               <div className="car-image">
                 {car.image_url ? (
-                  <img src={car.image_url} alt={`${car.make} ${car.model}`} />
+                  <img src={car.image_url} alt={car.name} />
                 ) : (
                   <div className="placeholder-image">
                     <span>🚗</span>
@@ -116,33 +194,23 @@ const Cars = () => {
                   </div>
                 )}
               </div>
-              
+
               <div className="car-info">
                 <h3 className="car-title">
-                  {car.year} {car.make} {car.model}
+                  {car.year} {car.name}
                 </h3>
-                
+
                 <p className="car-price">{formatPrice(car.price)}</p>
-                
+
                 <div className="car-details">
                   <span className="detail-item">
                     <strong>Year:</strong> {car.year}
                   </span>
                   <span className="detail-item">
-                    <strong>Mileage:</strong> {car.mileage?.toLocaleString() || 'N/A'} miles
+                    <strong>Type:</strong> {car.type}
                   </span>
-                  {car.color && (
-                    <span className="detail-item">
-                      <strong>Color:</strong> {car.color}
-                    </span>
-                  )}
-                  {car.fuel_type && (
-                    <span className="detail-item">
-                      <strong>Fuel:</strong> {car.fuel_type}
-                    </span>
-                  )}
                 </div>
-                
+
                 <div className="car-actions">
                   <Link to={`/cars/${car.id}`} className="view-details-btn">
                     View Details
@@ -152,14 +220,16 @@ const Cars = () => {
             </div>
           ))}
         </div>
-        
+
         {filteredAndSortedCars.length === 0 && !loading && (
           <div className="no-results">
             <h3>No vehicles found</h3>
-            <p>Try adjusting your search terms or browse all our available cars.</p>
+            <p>
+              Try adjusting your search terms or browse all our available cars.
+            </p>
             {searchTerm && (
-              <button 
-                onClick={() => setSearchTerm('')}
+              <button
+                onClick={() => setSearchTerm("")}
                 className="clear-search-btn"
               >
                 Clear Search

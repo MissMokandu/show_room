@@ -1,12 +1,12 @@
 // src/components/CarCard.js
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React from "react";
+import { Link } from "react-router-dom";
 
 const CarCard = ({ car }) => {
   const formatPrice = (price) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
       minimumFractionDigits: 0,
     }).format(price);
   };
@@ -15,7 +15,7 @@ const CarCard = ({ car }) => {
     <div className="car-card">
       <div className="car-image">
         {car.image_url ? (
-          <img src={car.image_url} alt={`${car.make} ${car.model}`} />
+          <img src={car.image_url} alt={car.name} />
         ) : (
           <div className="placeholder-image">
             <span>🚗</span>
@@ -23,33 +23,23 @@ const CarCard = ({ car }) => {
           </div>
         )}
       </div>
-      
+
       <div className="car-info">
         <h3 className="car-title">
-          {car.year} {car.make} {car.model}
+          {car.year} {car.name}
         </h3>
-        
+
         <p className="car-price">{formatPrice(car.price)}</p>
-        
+
         <div className="car-details">
           <span className="detail-item">
             <strong>Year:</strong> {car.year}
           </span>
           <span className="detail-item">
-            <strong>Mileage:</strong> {car.mileage?.toLocaleString() || 'N/A'} miles
+            <strong>Type:</strong> {car.type}
           </span>
-          {car.color && (
-            <span className="detail-item">
-              <strong>Color:</strong> {car.color}
-            </span>
-          )}
-          {car.fuel_type && (
-            <span className="detail-item">
-              <strong>Fuel:</strong> {car.fuel_type}
-            </span>
-          )}
         </div>
-        
+
         <div className="car-actions">
           <Link to={`/cars/${car.id}`} className="view-details-btn">
             View Details
