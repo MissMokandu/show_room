@@ -38,21 +38,17 @@ const CarCard = ({ car }) => {
           <span className="detail-item">
             <strong>Mileage:</strong> {car.mileage?.toLocaleString() || 'N/A'} miles
           </span>
-          {car.showroom && (
+          {car.color && (
             <span className="detail-item">
-              <strong>Showroom:</strong> {car.showroom.name}
+              <strong>Color:</strong> {car.color}
+            </span>
+          )}
+          {car.fuel_type && (
+            <span className="detail-item">
+              <strong>Fuel:</strong> {car.fuel_type}
             </span>
           )}
         </div>
-        
-        {car.description && (
-          <p className="car-description">
-            {car.description.length > 100 
-              ? `${car.description.substring(0, 100)}...` 
-              : car.description
-            }
-          </p>
-        )}
         
         <div className="car-actions">
           <Link to={`/cars/${car.id}`} className="view-details-btn">

@@ -53,7 +53,7 @@ const CarDetails = () => {
               />
             ) : (
               <div className="placeholder-image large">
-                <span>🚗</span>
+                <span>car</span>
                 <p>No Image Available</p>
               </div>
             )}
@@ -64,7 +64,7 @@ const CarDetails = () => {
             <p className="price">{formatPrice(car.price)}</p>
             
             <div className="specifications">
-              <h3>Specifications</h3>
+              <h3>Vehicle Specifications</h3>
               <div className="spec-grid">
                 <div className="spec-item">
                   <strong>Make:</strong>
@@ -80,7 +80,7 @@ const CarDetails = () => {
                 </div>
                 <div className="spec-item">
                   <strong>Mileage:</strong>
-                  <span>{car.mileage?.toLocaleString() || 'N/A'} miles</span>
+                  <span>{car.mileage?.toLocaleString() || 'N/A'} kilometres</span>
                 </div>
                 {car.engine && (
                   <div className="spec-item">
@@ -109,44 +109,49 @@ const CarDetails = () => {
               </div>
             </div>
             
-            {car.description && (
-              <div className="description">
-                <h3>Description</h3>
-                <p>{car.description}</p>
+            <div className="contact-section">
+              <h3>Interested in this vehicle?</h3>
+              <p>Contact us today to schedule a test drive or get more information about this {car.year} {car.make} {car.model}.</p>
+              
+              <div className="contact-info">
+                <div className="contact-item">
+                  <strong>Visit Us:</strong>
+                  <span>123 Auto Gallery Drive, Your City, ST 12345</span>
+                </div>
+                <div className="contact-item">
+                  <strong>Call Us:</strong>
+                  <span>(555) 123-4567</span>
+                </div>
+                <div className="contact-item">
+                  <strong>Email Us:</strong>
+                  <span>info@autogallery.com</span>
+                </div>
+                <div className="contact-item">
+                  <strong>Hours:</strong>
+                  <span>Mon-Fri: 9AM-7PM, Sat: 9AM-6PM, Sun: 12PM-5PM</span>
+                </div>
               </div>
-            )}
-            
-            {car.showroom && (
-              <div className="showroom-info">
-                <h3>Showroom Information</h3>
-                <p><strong>Name:</strong> {car.showroom.name}</p>
-                {car.showroom.address && (
-                  <p><strong>Address:</strong> {car.showroom.address}</p>
-                )}
-                {car.showroom.phone && (
-                  <p><strong>Phone:</strong> {car.showroom.phone}</p>
-                )}
-                {car.showroom.email && (
-                  <p><strong>Email:</strong> {car.showroom.email}</p>
-                )}
-              </div>
-            )}
+            </div>
             
             <div className="action-buttons">
               <button 
                 onClick={() => setShowContactForm(true)}
-                className="contact-btn"
+                className="contact-btn primary"
               >
-                Contact About This Car
+                Get More Information
               </button>
-              {car.showroom && (
-                <Link 
-                  to={`/showrooms/${car.showroom.id}`}
-                  className="showroom-btn"
-                >
-                  View Showroom
-                </Link>
-              )}
+              <a 
+                href="tel:(254) 123-4567"
+                className="phone-btn secondary"
+              >
+                Call Now
+              </a>
+              <Link 
+                to="/about"
+                className="about-btn secondary"
+              >
+                About Our Gallery
+              </Link>
             </div>
           </div>
         </div>

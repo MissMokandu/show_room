@@ -28,13 +28,12 @@ const ContactForm = ({ car, onClose }) => {
       const contactData = {
         ...values,
         car_id: car.id,
-        showroom_id: car.showroom_id,
         subject: `Inquiry about ${car.year} ${car.make} ${car.model}`,
         created_at: new Date().toISOString()
       };
 
       await contactsAPI.create(contactData);
-      alert('Your message has been sent successfully! The showroom will contact you soon.');
+      alert('Your message has been sent successfully! We will contact you soon.');
       resetForm();
       onClose();
     } catch (error) {

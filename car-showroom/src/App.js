@@ -5,7 +5,8 @@ import Navbar from './components/Navbar';
 import Home from './pages/Home';
 import Cars from './pages/Cars';
 import CarDetails from './pages/CarDetails';
-import Showroom from "./pages/Showroom";
+import About from './pages/About';
+import Contact from './pages/Contact';
 import AdminDashboard from './pages/AdminDashboard';
 import './App.css';
 
@@ -19,7 +20,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/cars" element={<Cars />} />
             <Route path="/cars/:id" element={<CarDetails />} />
-            <Route path="/showroom" element={<Showroom />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
             <Route path="/admin" element={<AdminDashboard />} />
           </Routes>
         </main>

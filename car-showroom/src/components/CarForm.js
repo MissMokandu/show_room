@@ -4,7 +4,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { carsAPI } from '../services/api';
 
-const CarForm = ({ car, showrooms, onSuccess, onClose }) => {
+const CarForm = ({ car, onSuccess, onClose }) => {
   const isEditing = Boolean(car);
   const currentYear = new Date().getFullYear();
 
@@ -31,13 +31,8 @@ const CarForm = ({ car, showrooms, onSuccess, onClose }) => {
       .integer('Mileage must be a whole number')
       .min(0, 'Mileage cannot be negative')
       .max(999999, 'Mileage cannot exceed 999,999'),
-    showroom_id: Yup.number()
-      .positive('Please select a showroom')
-      .required('Showroom is required'),
     image_url: Yup.string()
       .url('Must be a valid URL'),
-    description: Yup.string()
-      .max(1000, 'Description must be less than 1000 characters'),
     color: Yup.string()
       .max(20, 'Color must be less than 20 characters'),
     engine: Yup.string()
@@ -54,9 +49,7 @@ const CarForm = ({ car, showrooms, onSuccess, onClose }) => {
     year: car?.year || '',
     price: car?.price || '',
     mileage: car?.mileage || '',
-    showroom_id: car?.showroom_id || '',
     image_url: car?.image_url || '',
-    description: car?.description || '',
     color: car?.color || '',
     engine: car?.engine || '',
     transmission: car?.transmission || '',
@@ -70,8 +63,7 @@ const CarForm = ({ car, showrooms, onSuccess, onClose }) => {
         ...values,
         year: parseInt(values.year),
         price: parseFloat(values.price),
-        mileage: values.mileage ? parseInt(values.mileage) : null,
-        showroom_id: parseInt(values.showroom_id)
+        mileage: values.mileage ? parseInt(values.mileage) : null
       };
 
       let response;
@@ -174,21 +166,15 @@ const CarForm = ({ car, showrooms, onSuccess, onClose }) => {
                 </div>
 
                 <div className="form-group">
-                  <label htmlFor="showroom_id">Showroom *</label>
+                  <label htmlFor="color">Color</label>
                   <Field
-                    as="select"
-                    id="showroom_id"
-                    name="showroom_id"
-                    className="form-select"
-                  >
-                    <option value="">Select Showroom</option>
-                    {showrooms.map(showroom => (
-                      <option key={showroom.id} value={showroom.id}>
-                        {showroom.name}
-                      </option>
-                    ))}
-                  </Field>
-                  <ErrorMessage name="showroom_id" component="div" className="error-message" />
+                    type="text"
+                    id="color"
+                    name="color"
+                    className="form-input"
+                    placeholder="e.g., Blue"
+                  />
+                  <ErrorMessage name="color" component="div" className="error-message" />
                 </div>
               </div>
 
@@ -206,18 +192,6 @@ const CarForm = ({ car, showrooms, onSuccess, onClose }) => {
 
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="color">Color</label>
-                  <Field
-                    type="text"
-                    id="color"
-                    name="color"
-                    className="form-input"
-                    placeholder="e.g., Blue"
-                  />
-                  <ErrorMessage name="color" component="div" className="error-message" />
-                </div>
-
-                <div className="form-group">
                   <label htmlFor="engine">Engine</label>
                   <Field
                     type="text"
@@ -228,9 +202,7 @@ const CarForm = ({ car, showrooms, onSuccess, onClose }) => {
                   />
                   <ErrorMessage name="engine" component="div" className="error-message" />
                 </div>
-              </div>
 
-              <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="transmission">Transmission</label>
                   <Field
@@ -246,7 +218,9 @@ const CarForm = ({ car, showrooms, onSuccess, onClose }) => {
                   </Field>
                   <ErrorMessage name="transmission" component="div" className="error-message" />
                 </div>
+              </div>
 
+              <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="fuel_type">Fuel Type</label>
                   <Field
@@ -263,19 +237,6 @@ const CarForm = ({ car, showrooms, onSuccess, onClose }) => {
                   </Field>
                   <ErrorMessage name="fuel_type" component="div" className="error-message" />
                 </div>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="description">Description</label>
-                <Field
-                  as="textarea"
-                  id="description"
-                  name="description"
-                  rows="4"
-                  className="form-textarea"
-                  placeholder="Describe the car's features, condition, etc."
-                />
-                <ErrorMessage name="description" component="div" className="error-message" />
               </div>
 
               <div className="form-actions">

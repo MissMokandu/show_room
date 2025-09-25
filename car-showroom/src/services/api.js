@@ -18,15 +18,6 @@ export const carsAPI = {
   delete: (id) => api.delete(`/cars/${id}`),
 };
 
-// Showrooms API
-export const showroomAPI = {
-  getAll: () => api.get('/showroom'),
-  getById: (id) => api.get(`/showroom/${id}`),
-  create: (showroomData) => api.post('/showroom', showroomData),
-  update: (id, showroomData) => api.put(`/showroom/${id}`, showroomData),
-  delete: (id) => api.delete(`/showroom/${id}`),
-};
-
 // Contacts API
 export const contactsAPI = {
   create: (contactData) => api.post('/contacts', contactData),

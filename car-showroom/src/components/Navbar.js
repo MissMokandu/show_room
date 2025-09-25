@@ -10,7 +10,7 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="nav-container">
         <Link to="/" className="nav-logo">
-          Car Showroom
+          Auto Gallery
         </Link>
         <ul className="nav-menu">
           <li className="nav-item">
@@ -31,10 +31,18 @@ const Navbar = () => {
           </li>
           <li className="nav-item">
             <Link 
-              to="/showrooms" 
-              className={`nav-link ${isActive('/showroom') ? 'active' : ''}`}
+              to="/about" 
+              className={`nav-link ${isActive('/about') ? 'active' : ''}`}
             >
-              Showrooms
+              About
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link 
+              to="/contact" 
+              className={`nav-link ${isActive('/contact') ? 'active' : ''}`}
+            >
+              Contact
             </Link>
           </li>
           <li className="nav-item">
