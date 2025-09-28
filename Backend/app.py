@@ -3,9 +3,11 @@ from models import db, Car, Admin, Showroom, Contact, Buyer
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_migrate import Migrate
 from flask_cors import CORS
+import os
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///showroom.db'
+# Database URI: Uses DATABASE_URL env var for production (e.g., PostgreSQL), defaults to SQLite for local development
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///instance/showroom.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "your_secret_key"
 
