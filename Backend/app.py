@@ -4,10 +4,11 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_migrate import Migrate
 from flask_cors import CORS
 import os
+from flask import send_from_directory
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../car-showroom/build', static_url_path='/')
 # Database URI: Uses DATABASE_URL env var for production (e.g., PostgreSQL), defaults to SQLite for local development
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///instance/showroom.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:////home/benadette/show_room/Backend/instance/showroom.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.secret_key = "your_secret_key"
 
@@ -165,6 +166,16 @@ def delete_contact(id):
     db.session.delete(contact)
     db.session.commit()
     return jsonify({"message": "Contact deleted successfully"}), 200
+
+# Serve React static files
+@app.route('/')
+def serve_index():
+    return app.send_static_file('index.html')
+
+@app.errorhandler(404)
+def not_found(e):
+    # Serve React app for any unknown routes (client-side routing)
+    return app.send_static_file('index.html')
 
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
