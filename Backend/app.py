@@ -1,25 +1,43 @@
+import os
+import re
 from flask import Flask, request, jsonify
-from models import db, Car, Admin, Showroom, Contact, Buyer
-from werkzeug.security import generate_password_hash, check_password_hash
 from flask_migrate import Migrate
 from flask_cors import CORS
-import os
-from flask import send_from_directory
 
+from models import db, Car, Admin, Showroom, Contact, Buyer
+
+# -------------------------------
+# App Setup
+# -------------------------------
 app = Flask(__name__, static_folder='../car-showroom/build', static_url_path='/')
-# Database URI: Uses DATABASE_URL env var for production (e.g., PostgreSQL), defaults to SQLite for local development
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:////home/benadette/show_room/Backend/instance/showroom.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = "your_secret_key"
 
+# -------------------------------
+# Database Config
+# -------------------------------
+database_url = os.getenv("DATABASE_URL")
+
+if database_url:
+    # Render provides postgres://, but SQLAlchemy needs postgresql://
+    if database_url.startswith("postgres://"):
+        database_url = re.sub(r'^postgres://', 'postgresql://', database_url)
+    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
+else:
+    # Local development fallback (works on your laptop)
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
+
+app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.secret_key = os.environ.get("SECRET_KEY", "your_secret_key")
+
+# -------------------------------
+# Extensions
+# -------------------------------
 db.init_app(app)
 migrate = Migrate(app, db)
 CORS(app)
 
-# with app.app_context():
-#     db.create_all()
-
-
+# -------------------------------
+# Routes
+# -------------------------------
 @app.route('/cars', methods=['GET'])
 def list_cars():
     cars = Car.query.all()
@@ -34,7 +52,7 @@ def add_car():
         year=data['year'],
         type=data['type'],
         image_url=data.get('image_url'),
-        showroom_id=data['showroom_id']  # assign showroom
+        showroom_id=data['showroom_id']
     )
     db.session.add(car)
     db.session.commit()
@@ -49,14 +67,12 @@ def get_car(id):
 def update_car(id):
     car = Car.query.get_or_404(id)
     data = request.get_json()
-    
     car.name = data.get('name', car.name)
     car.price = data.get('price', car.price)
     car.year = data.get('year', car.year)
     car.type = data.get('type', car.type)
     car.image_url = data.get('image_url', car.image_url)
     car.showroom_id = data.get('showroom_id', car.showroom_id)
-    
     db.session.commit()
     return jsonify(car.to_dict())
 
@@ -67,19 +83,13 @@ def delete_car(id):
     db.session.commit()
     return jsonify({"message": "Car deleted successfully"}), 200
 
-# -----------------------
-# Admin Routes
-# -----------------------
+# -------- Admin --------
 @app.route('/admin/signup', methods=['POST'])
 def admin_signup():
     data = request.get_json()
     if Admin.query.filter_by(username=data['username']).first():
         return jsonify({"error": "Username already exists"}), 400
-
-    admin = Admin(
-        username=data['username'],
-        showroom_id=data['showroom_id']
-    )
+    admin = Admin(username=data['username'], showroom_id=data['showroom_id'])
     admin.set_password(data['password'])
     db.session.add(admin)
     db.session.commit()
@@ -93,9 +103,7 @@ def admin_login():
         return jsonify({"message": "Login successful", "admin": admin.to_dict()}), 200
     return jsonify({"error": "Invalid credentials"}), 401
 
-# -----------------------
-# Buyer Routes
-# -----------------------
+# -------- Buyer --------
 @app.route('/buyer/signup', methods=['POST'])
 def buyer_signup():
     data = request.get_json()
@@ -103,11 +111,7 @@ def buyer_signup():
         return jsonify({"error": "Username already exists"}), 400
     if Buyer.query.filter_by(email=data['email']).first():
         return jsonify({"error": "Email already exists"}), 400
-
-    buyer = Buyer(
-        username=data['username'],
-        email=data['email']
-    )
+    buyer = Buyer(username=data['username'], email=data['email'])
     buyer.set_password(data['password'])
     db.session.add(buyer)
     db.session.commit()
@@ -121,9 +125,7 @@ def buyer_login():
         return jsonify({"message": "Login successful", "buyer": buyer.to_dict()}), 200
     return jsonify({"error": "Invalid credentials"}), 401
 
-# -----------------------
-# Contact Routes
-# -----------------------
+# -------- Contacts --------
 @app.route('/contacts', methods=['GET'])
 def list_contacts():
     contacts = Contact.query.all()
@@ -151,12 +153,10 @@ def get_contact(id):
 def update_contact(id):
     contact = Contact.query.get_or_404(id)
     data = request.get_json()
-    
     contact.name = data.get('name', contact.name)
     contact.email = data.get('email', contact.email)
     contact.phone = data.get('phone', contact.phone)
     contact.message = data.get('message', contact.message)
-    
     db.session.commit()
     return jsonify(contact.to_dict())
 
@@ -167,15 +167,19 @@ def delete_contact(id):
     db.session.commit()
     return jsonify({"message": "Contact deleted successfully"}), 200
 
-# Serve React static files
+# -------- Frontend Serving --------
 @app.route('/')
 def serve_index():
     return app.send_static_file('index.html')
 
 @app.errorhandler(404)
 def not_found(e):
-    # Serve React app for any unknown routes (client-side routing)
     return app.send_static_file('index.html')
 
+# -------------------------------
+# Run Local Dev
+# -------------------------------
 if __name__ == "__main__":
     app.run(debug=True, port=5001)
+
+
