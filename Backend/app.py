@@ -14,16 +14,8 @@ app = Flask(__name__, static_folder='../car-showroom/build', static_url_path='/'
 # -------------------------------
 # Database Config
 # -------------------------------
-database_url = os.getenv("DATABASE_URL")
+app.config["SQLALCHEMY_DATABSE_URI"]="sqlite:///database.db"
 
-if database_url:
-    # Render provides postgres://, but SQLAlchemy needs postgresql://
-    if database_url.startswith("postgres://"):
-        database_url = re.sub(r'^postgres://', 'postgresql://', database_url)
-    app.config["SQLALCHEMY_DATABASE_URI"] = database_url
-else:
-    # Local development fallback (works on your laptop)
-    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.secret_key = os.environ.get("SECRET_KEY", "your_secret_key")
@@ -179,7 +171,10 @@ def not_found(e):
 # -------------------------------
 # Run Local Dev
 # -------------------------------
-if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+with app.app_context():
+    db.create_all()
+app.run(debug=True, port=5001)
+
+
 
 
