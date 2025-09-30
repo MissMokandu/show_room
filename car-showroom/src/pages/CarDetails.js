@@ -1,5 +1,5 @@
 // src/pages/CarDetails.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { carsAPI } from "../services/api";
 import ContactForm from "../components/ContactForm";
@@ -11,11 +11,7 @@ const CarDetails = () => {
   const [error, setError] = useState(null);
   const [showContactForm, setShowContactForm] = useState(false);
 
-  useEffect(() => {
-    fetchCarDetails();
-  }, [id]);
-
-  const fetchCarDetails = async () => {
+  const fetchCarDetails = useCallback(async () => {
     try {
       const response = await carsAPI.getById(id);
       setCar(response.data);
@@ -24,7 +20,11 @@ const CarDetails = () => {
       setError("Failed to load car details");
       setLoading(false);
     }
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchCarDetails();
+  }, [fetchCarDetails]);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat("en-US", {
