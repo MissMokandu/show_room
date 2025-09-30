@@ -18,13 +18,13 @@ const Signup = () => {
     try {
       let response;
       if (role === "admin") {
-        response = await fetch("http://localhost:5001/admin/signup", {
+        response = await fetch("https://show-room-aype.onrender.com/admin/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password, showroom_id: 1 }),
         });
       } else {
-        response = await fetch("http://localhost:5001/buyer/signup", {
+        response = await fetch("https://show-room-aype.onrender.com/buyer/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ username, password, email }),
